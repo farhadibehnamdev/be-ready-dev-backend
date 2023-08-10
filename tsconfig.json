@@ -1,11 +1,17 @@
 {
+  "ts-node": {
+    "files": true
+  },
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
+    "moduleResolution": "node",
     "removeComments": true,
+    "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
@@ -15,8 +21,25 @@
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
+    "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": false,
+    "lib": [
+      "es5",
+      "es6",
+      "dom",
+      "es2015.core",
+      "es2015.collection",
+      "es2015.generator",
+      "es2015.iterable",
+      "es2015.promise",
+      "es2015.proxy",
+      "es2015.reflect",
+      "es2015.symbol",
+      "es2015.symbol.wellknown",
+      "es2017",
+      "esnext.asynciterable",
+      "es2021"
+    ],
     "paths": {
       "@shared/*": ["src/app/shared/*"],
       "@modules/*": ["src/app/modules/*"]
