@@ -32,21 +32,6 @@ export class User {
   @Prop({ type: Date })
   passwordChangedAt?: Date;
 
-  @Prop({ type: String })
-  address?: string;
-
-  @Prop({ type: String })
-  phone?: string;
-
-  @Prop({ type: String })
-  website?: string;
-
-  @Prop({ type: String })
-  company?: string;
-
-  @Prop({ type: String })
-  bio?: string;
-
   @Prop({ type: Types.ObjectId, ref: 'Image', autopopulate: true })
   avatar: Types.ObjectId;
 }

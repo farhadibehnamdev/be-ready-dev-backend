@@ -1,4 +1,4 @@
-import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 import { ApiProperty } from '@nestjs/swagger';
 import { RoleTypeEnum } from '@shared/enums/role-type.enum';
@@ -56,54 +56,4 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsEnum(RoleTypeEnum)
   role: RoleTypeEnum;
-
-  @ApiProperty({
-    type: String,
-    required: false,
-    description: 'User address',
-    example: 'New York, USA',
-  })
-  @IsString()
-  @IsOptional()
-  address?: string;
-
-  @ApiProperty({
-    type: String,
-    required: false,
-    description: 'User phone',
-    example: '+1 212-226-3126',
-  })
-  @IsString()
-  @IsOptional()
-  phone?: string;
-
-  @ApiProperty({
-    type: String,
-    required: false,
-    description: 'User company name',
-    example: 'Google',
-  })
-  @IsString()
-  @IsOptional()
-  company?: string;
-
-  @ApiProperty({
-    type: String,
-    required: false,
-    description: 'User website URL',
-    example: 'https://google.com',
-  })
-  @IsString()
-  @IsOptional()
-  website?: string;
-
-  @ApiProperty({
-    type: String,
-    required: false,
-    description: 'User bio',
-    example: 'I am a software engineer',
-  })
-  @IsString()
-  @IsOptional()
-  bio?: string;
 }
