@@ -29,7 +29,7 @@ import { FindUsersDto } from './dtos/find-users.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserService } from './user.service';
 
-@Roles(RoleTypeEnum.SuperAdmin, RoleTypeEnum.Admin)
+@Roles(RoleTypeEnum.Admin)
 @ApiForbiddenResponse({
   description:
     'You are not authorized to access this endpoint, please contact the administrator!',
