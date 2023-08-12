@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import { Types } from 'mongoose';
@@ -7,13 +7,7 @@ import { ITokenDocument } from '@modules/token/interfaces/token.interface';
 import { TokenRepository } from '@modules/token/repositories/token.repository';
 import { IUserDocument } from '@modules/user/interfaces/user.interface';
 import { UserRepository } from '@modules/user/repositories/user.repository';
-import {
-  BadRequestException,
-  ForbiddenException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DebuggerService } from '@shared/debugger/debugger.service';
 import { TokenTypes } from '@shared/enums/token-type.enum';
@@ -149,10 +143,16 @@ export class AuthService {
       'auth.jwt.accessToken.secretKey',
     );
 
+    const verifyEmailTokenSecret = this.configService.get<string>(
+      'auth.jwt.verifyEmailToken.secretKey',
+    );
+
     let payload;
 
     if (type === TokenTypes.REFRESH) {
       payload = jwt.verify(token, refreshTokenSecret);
+    } else if (type === TokenTypes.VERIFY_EMAIL) {
+      payload = jwt.verify(token, verifyEmailTokenSecret);
     } else if (type === TokenTypes.ACCESS) {
       payload = jwt.verify(token, accessTokenSecret);
     }
@@ -282,6 +282,9 @@ export class AuthService {
   public async verifyEmail(token: string) {
     const tokenDoc = await this.verifyToken(token, TokenTypes.VERIFY_EMAIL);
     const user = await this.userRepository.findById(tokenDoc.user._id);
+    console.log('token:', token);
+    console.log('tokenDoc:', tokenDoc);
+    console.log('user:', user);
 
     user.isEmailVerified = true;
 

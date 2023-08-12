@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -8,7 +8,6 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiParam,
   ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -88,11 +87,6 @@ export class AuthController {
   }
 
   @Post('reset-password')
-  @ApiOperation({ summary: 'Reset the password for a user' })
-  @ApiBody({ type: ResetPasswordDto })
-  @ApiQuery({ name: 'token', type: String })
-  @ApiOkResponse({ description: 'Password reset successfully' })
-  @ApiBadRequestResponse({ description: 'Invalid or expired token' })
   @AllowAnonymous()
   async resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
@@ -102,21 +96,12 @@ export class AuthController {
   }
 
   @Get('verify-email')
-  @ApiOperation({ summary: 'Verify the email address of a user' })
-  @ApiQuery({ name: 'token', type: String })
-  @ApiOkResponse({ description: 'Email verified successfully' })
-  @ApiBadRequestResponse({ description: 'Invalid or expired token' })
   @AllowAnonymous()
   async verifyEmail(@Query('token') token: string) {
     return this.authService.verifyEmail(token);
   }
 
   @Post('send-verification-email')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Send a verification email to the logged in user' })
-  @ApiOkResponse({ description: 'Verification email sent successfully' })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized access' })
-  @ApiForbiddenResponse({ description: 'Access to the resource is forbidden' })
   async sendVerificationEmail(@AuthUser() user: JwtPayload) {
     return this.authService.sendVerificationEmail(user);
   }
