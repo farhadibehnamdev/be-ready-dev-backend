@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { NextFunction } from 'express';
 
 import { ImageModule } from '@modules/image/image.module';

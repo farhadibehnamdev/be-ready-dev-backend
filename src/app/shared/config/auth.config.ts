@@ -6,7 +6,7 @@ export default registerAs(
     jwt: {
       accessToken: {
         secretKey: process.env.AUTH_JWT_ACCESS_TOKEN_SECRET_KEY,
-        expirationTime: 30,
+        expirationTime: 1,
       },
       refreshToken: {
         secretKey: process.env.AUTH_JWT_REFRESH_TOKEN_SECRET_KEY,
@@ -18,6 +18,10 @@ export default registerAs(
       },
       verifyEmailToken: {
         secretKey: process.env.AUTH_JWT_VERIFY_EMAIL_TOKEN_SECRET_KEY,
+        expirationTime: 1,
+      },
+      resetPasswordToken: {
+        secretKey: process.env.AUTH_JWT_RESET_PASSWORD_TOKEN_SECRET_KEY,
         expirationTime: 1,
       },
     },

@@ -4,8 +4,16 @@ export enum ENUM_FILE_IMAGE_MIME {
   PNG = 'image/png',
 }
 
+export enum ENUM_FILE_AUDIO_MIME {
+  MP3 = 'audio/mpeg',
+  WAV = 'audio/wav',
+  AAC = 'audio/mp4',
+  OGG = 'audio/ogg',
+}
+
 export enum ENUM_FILE_TYPE {
   IMAGE = 'IMAGE',
+  AUDIO = 'AUDIO',
 }
 
 export enum ENUM_FILE_STATUS_CODE_ERROR {

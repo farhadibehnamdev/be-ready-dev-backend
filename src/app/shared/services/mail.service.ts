@@ -2,6 +2,11 @@ import { createTransport } from 'nodemailer';
 
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import * as dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
+import Handlebars from 'handlebars';
+dotenv.config();
 
 @Injectable()
 export class MailService {
@@ -12,31 +17,40 @@ export class MailService {
   private smtpUser: string;
   private smtpPass: string;
   constructor(private readonly configService: ConfigService) {
-    this.appURL = this.configService.get<string>('app.url');
+    this.appURL = process.env.APP_URL;
 
-    this.from = this.configService.get<string>('email.from');
-
-    this.smtpHost = this.configService.get<string>('email.smtp.host');
-    this.smtpPort = this.configService.get<number>('email.smtp.port');
-    this.smtpUser = this.configService.get<string>('email.smtp.user');
-    this.smtpPass = this.configService.get<string>('email.smtp.pass');
+    this.from = process.env.EMAIL_FROM;
   }
 
-  async sendEmail(to: string, subject: string, text: string): Promise<any> {
+  async compileTemplate(data: any, templatePath: string): Promise<string> {
+    const filePath = path.join(process.cwd(), templatePath);
+    const source = await fs.promises.readFile(filePath, 'utf-8');
+    const template = Handlebars.compile(source);
+    return template(data);
+  }
+
+  async sendEmail(to: string, subject: string, html: string): Promise<any> {
     const transport = createTransport({
-      host: this.smtpHost,
-      port: this.smtpPort,
+      host: process.env.EMAIL_SMTP_HOST,
+      port: process.env.EMAIL_SMTP_PORT,
+      secure: true,
+      logger: true,
+      debugger: true,
+      secureConnection: false,
       auth: {
-        user: this.smtpUser,
-        pass: this.smtpPass,
+        user: process.env.EMAIL_SMTP_USER,
+        pass: process.env.EMAIL_SMTP_PASS,
+      },
+      tls: {
+        rejectUnAuthorized: true,
       },
     });
     // Create the email options and body
     const mailOptions = {
-      from: `Blacked Shop < ${this.from} >`,
+      from: `Bshop < ${this.from} >`,
       to,
       subject,
-      text,
+      html,
     };
 
     // Set up the email options and delivering it
@@ -45,11 +59,14 @@ export class MailService {
 
   async sendResetPasswordEmail(to: string, token: string): Promise<any> {
     const subject = 'Reset Password';
-    const resetPasswordURL = `${this.appURL}/reset-password?token=${token}`;
-    const text = `Dear user,
-    To reset your password, click on this link: ${resetPasswordURL}
-    If you did not request any password resets, then ignore this email.`;
-
+    const resetPasswordURL = `${this.appURL}/auth/reset-password?token=${token}`;
+    // const text = `Dear user,
+    // To reset your password, click on this link: ${resetPasswordURL}
+    // If you did not request any password resets, then ignore this email.`;
+    const text = await this.compileTemplate(
+      { resetPasswordURL },
+      'src/views/resetPassword.hbs',
+    );
     return await this.sendEmail(to, subject, text);
   }
 
@@ -63,10 +80,11 @@ export class MailService {
 
   async sendVerifyEmail(to: string, token: string): Promise<any> {
     const subject = 'Email Verification';
-    const verifyEmailURL = `${this.appURL}/verify-email?token=${token}`;
-    const text = `Dear user,
-    To verify your email, click on this link: ${verifyEmailURL}
-    If you did not request any email verification, then ignore this email.`;
+    const verifyEmailURL = `${this.appURL}/auth/email-verified?token=${token}`;
+    const text = await this.compileTemplate(
+      { verifyEmailURL },
+      'src/views/index.hbs',
+    );
 
     return await this.sendEmail(to, subject, text);
   }

@@ -5,7 +5,10 @@ import {
 import winston from 'winston';
 
 import { AuthModule } from '@modules/auth/auth.module';
+import { CategoryModule } from '@modules/category/category.module';
+import { FavoriteModule } from '@modules/favorite/favorite.module';
 import { ImageModule } from '@modules/image/image.module';
+import { TagModule } from '@modules/tag/tag.module';
 import { UserModule } from '@modules/user/user.module';
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -20,6 +23,11 @@ import { JwtAuthGuard } from '@shared/guards/auth.guard';
 import { RolesGuard } from '@shared/guards/roles.guard';
 import { LoggerModule } from '@shared/logger/logger.module';
 import { LoggerMiddleware } from '@shared/middlewares/http-logger.middleware';
+import { AudioModule } from '@modules/audio/audio.module';
+import { HostModule } from '@modules/host/host.module';
+import { EpisodeModule } from '@modules/episode/episode.module';
+import { ListeningSessionModule } from '@modules/listeningSession/listeningSession.module';
+import { GoalModule } from '@modules/goal/goal.module';
 
 @Module({
   imports: [
@@ -70,10 +78,19 @@ import { LoggerMiddleware } from '@shared/middlewares/http-logger.middleware';
         };
       },
     }),
+
     AuthModule,
     UserModule,
     ImageModule,
     LoggerModule,
+    CategoryModule,
+    AudioModule,
+    HostModule,
+    EpisodeModule,
+    TagModule,
+    FavoriteModule,
+    ListeningSessionModule,
+    GoalModule,
   ],
   providers: [
     ConfigService,
