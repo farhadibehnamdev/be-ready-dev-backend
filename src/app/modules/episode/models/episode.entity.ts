@@ -1,6 +1,10 @@
 import { Date, Types } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import {
+  Transcript,
+  TranscriptSchema,
+} from '@modules/transcript/models/transcript.entity';
 
 @Schema({
   timestamps: true,
@@ -19,8 +23,8 @@ export class Episode {
   @Prop({ type: Number, required: true })
   likes: number;
 
-  @Prop({ type: String, required: true })
-  transcript: string;
+  @Prop({ type: [Types.ObjectId], ref: 'Transcript', autopopulate: true })
+  transcript: Transcript;
 
   @Prop({ type: Number, required: true })
   duration: number;

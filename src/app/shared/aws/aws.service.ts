@@ -8,8 +8,10 @@ import {
   GetObjectCommand,
   ListBucketsCommand,
   ListObjectsV2Command,
+  ObjectCannedACL,
   ObjectIdentifier,
   PutObjectCommand,
+  PutObjectCommandInput,
   S3Client,
 } from '@aws-sdk/client-s3';
 import {
@@ -140,13 +142,12 @@ export class AwsS3Service implements OnModuleInit {
       | string,
     options: Record<string, any>,
   ): Promise<IAwsS3Response> {
-    let path: string = options && options.path ? options.path : undefined;
-    const acl: string = options && options.acl ? options.acl : 'public-read';
+    const path: string = options && options.path ? options.path : undefined;
+    const acl: any = options && options.acl ? options.acl : 'public.read';
 
     // deepcode ignore GlobalReplacementRegex: <I want to replace only the first forward slash>
     options.path = path.startsWith('/') ? path.replace('/', '') : `${path}`;
-    console.log('options.path :', options.path);
-    const key: string = `${path}/${filename}.png`;
+    const key = `${path}/${filename}.png`;
     content = await sharp(content, {})
       .resize({
         fit: sharp.fit.fill,

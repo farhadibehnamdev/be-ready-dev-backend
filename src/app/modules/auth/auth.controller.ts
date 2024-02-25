@@ -8,28 +8,22 @@ import { JwtPayload } from '@shared/interfaces/jwt-payload.interface';
 
 import { AuthService } from './auth.service';
 import { ForgotPasswordDto } from './dtos/forgot-password.dto';
-import { LoginResponseDTO } from './dtos/login-response.dto';
 import { LoginDto } from './dtos/login.dto';
-import { LogoutDto } from './dtos/logout.dto';
 import { RegisterDto } from './dtos/register.dto';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
-import { TokenDto } from './dtos/token.dto';
 import { Request, Response } from 'express';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiQuery,
-  ApiBody,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
 @Controller('auth')
 @ApiTags('Authentication')
 @Roles(RoleTypeEnum.All)
 export class AuthController {
   constructor(private authService: AuthService) {}
-
+  @Get('test')
+  @AllowAnonymous()
+  async test() {
+    return { status: 'ok' };
+  }
   @ApiOperation({ summary: 'User login' })
   @ApiResponse({ status: 200, description: 'User successfully logged in.' })
   @ApiBody({ type: LoginDto })
