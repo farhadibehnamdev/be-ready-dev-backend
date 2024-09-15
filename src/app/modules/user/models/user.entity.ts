@@ -1,39 +1,40 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { RoleTypeEnum } from '@shared/enums/role-type.enum';
-
-@Schema({
-  timestamps: true,
-  versionKey: false,
-})
-export class User {
-  @Prop({ type: String, required: true })
-  firstName: string;
-
-  @Prop({ type: String, required: true })
-  lastName: string;
-
-  @Prop({ type: String, required: true, unique: true })
+@Schema()
+export class User extends Document {
+  @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ required: true })
   password: string;
 
-  @Prop({ type: String, required: true, enum: Object.values(RoleTypeEnum) })
-  role: RoleTypeEnum;
+  @Prop({ required: true })
+  username: string;
 
-  @Prop({ type: Boolean, default: false })
-  isEmailVerified: boolean;
+  @Prop()
+  profilePicture: string;
 
-  @Prop({ type: Boolean, default: false })
-  isDeleted: boolean;
+  @Prop({ enum: ['user', 'admin', 'moderator'], default: 'user' })
+  role: string;
 
-  @Prop({ type: Date })
-  passwordChangedAt?: Date;
+  @Prop({ enum: ['free', 'premium', 'vip'], default: 'free' })
+  subscriptionStatus: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Image', autopopulate: true })
-  avatar: Types.ObjectId;
+  @Prop()
+  subscriptionExpiryDate: Date;
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Content' }] })
+  watchHistory: Types.ObjectId[];
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Content' }] })
+  watchlist: Types.ObjectId[];
+
+  @Prop({ default: Date.now })
+  createdAt: Date;
+
+  @Prop({ default: Date.now })
+  updatedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

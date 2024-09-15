@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query, Res, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Res,
+  Req,
+  Header,
+} from '@nestjs/common';
 
 import { AuthUser } from '@shared/decorators/auth-user.decorator';
 import { AllowAnonymous } from '@shared/decorators/public.decorator';
@@ -38,6 +47,7 @@ export class AuthController {
   @ApiOperation({ summary: 'User registration' })
   @ApiResponse({ status: 201, description: 'User successfully registered.' })
   @ApiBody({ type: RegisterDto })
+  @Header('Cache-control', 'max-age=')
   async register(@Body() registerUserDto: RegisterDto) {
     return this.authService.register(registerUserDto);
   }

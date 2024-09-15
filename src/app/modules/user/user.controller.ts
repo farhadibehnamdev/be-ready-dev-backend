@@ -96,7 +96,7 @@ import {
 
 @Controller('users')
 @ApiTags('Users')
-@Roles(RoleTypeEnum.SuperAdmin, RoleTypeEnum.Admin)
+@Roles(RoleTypeEnum.Admin)
 export class UserController {
   constructor(private readonly service: UserService) {}
 
