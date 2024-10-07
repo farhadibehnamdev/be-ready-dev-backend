@@ -33,8 +33,9 @@ import { PaginationPipe } from '@shared/pipes/pagination.pipe';
 import { CreatePersonDto } from './dtos/create-person.dto';
 import { FindPersonsDto } from './dtos/find-persons.dto';
 import { UpdatePersonDto } from './dtos/update-person.dto';
+import { PersonService } from './person.service';
 
-@Roles(RoleTypeEnum.SuperAdmin, RoleTypeEnum.Admin)
+@Roles(RoleTypeEnum.Admin)
 @ApiTags('Persons')
 @Controller('Persons')
 export class PersonController {

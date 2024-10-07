@@ -7,6 +7,7 @@ import { BaseService } from '@shared/services/base.service';
 import { CreateDeckDto } from './dtos/create-deck.dto';
 import { IDeckDocument } from './interfaces/deck.interface';
 import { DeckRepository } from './repositories/deck.repository';
+import { Deck } from './models/deck.entity';
 
 @Injectable()
 export class DeckService extends BaseService<DeckRepository> {
@@ -14,9 +15,14 @@ export class DeckService extends BaseService<DeckRepository> {
     super();
   }
 
-  async create(createDeckDto: CreateDeckDto): Promise<IDeckDocument> {
+  async create(
+    createDeckDto: CreateDeckDto,
+    userId: Types.ObjectId,
+  ): Promise<IDeckDocument> {
+    const deck = (await this.repository.findById(userId)) as Deck;
+    if (deck.name === createDeckDto.name)
+      throw new HttpException(MessagesMapping['#18'], HttpStatus.CONFLICT);
     const result = await this.repository.create(createDeckDto);
-
     return result;
   }
 

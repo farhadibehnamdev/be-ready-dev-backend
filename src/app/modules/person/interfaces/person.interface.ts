@@ -4,7 +4,7 @@ export interface IPersonDocument extends Document {
   name: string;
   biography?: string;
   birthDate?: Date;
-  profileImage?: Types.ObjectId;
+  image?: Types.ObjectId;
   roles?: string[];
   createdAt?: Date;
   updatedAt?: Date;

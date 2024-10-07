@@ -61,12 +61,12 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
     return this.model.updateMany(filter, update, { new: true });
   }
 
-  async deleteById(_id: string | Types.ObjectId): Promise<T> {
-    return this.model.findByIdAndRemove(_id);
+  async deleteById(_id: string | Types.ObjectId): Promise<T | null> {
+    return this.model.findByIdAndDelete(_id);
   }
 
   async deleteOne(filter: object): Promise<T> {
-    return this.model.findOneAndRemove(filter, { useFindAndModify: false });
+    return this.model.findOneAndDelete(filter, { useFindAndModify: false });
   }
 
   async deleteMany(filter: object): Promise<any> {

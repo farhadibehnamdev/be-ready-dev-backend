@@ -11,20 +11,15 @@ import { CreateCardDto } from './dtos/create-card.dto';
 import { ICardDocument } from './interfaces/card.interface';
 import { CardRepository } from './repositories/card.repository';
 import { Card } from './models/card.entity';
-import { CardInput, FSRS } from 'ts-fsrs';
-import { getTime } from 'date-fns';
 
 @Injectable()
 export class CardService extends BaseService<CardRepository> {
-  private fsrs: FSRS;
-
   constructor(
     protected readonly repository: CardRepository,
     protected readonly awsService: AwsS3Service,
     protected readonly imageService: ImageService,
   ) {
     super();
-    this.fsrs = new FSRS({ enable_fuzz: true });
   }
 
   async reviewCard(cardId: string, grade: number): Promise<ICardDocument> {
@@ -34,54 +29,29 @@ export class CardService extends BaseService<CardRepository> {
     }
 
     const now = new Date();
-    const elapsedDays = card.last_review
-      ? (now.getTime() - card.last_review.getTime()) / (1000 * 3600 * 24)
-      : 0;
 
     const reviewLog = {
       rating: grade,
-      state: card.state,
-      due: card.due,
-      stability: card.stability,
-      difficulty: card.difficulty,
-      elapsed_days: elapsedDays,
-      scheduled_days: card.scheduled_days,
-      reps: card.reps,
-      lapses: card.lapses,
     };
 
-    const schedulingInfo = this.fsrs.repeat(reviewLog, new Date());
-    const { card: updatedCardInfo } = schedulingInfo[grade];
-
     // Update the existing card with new information
-    card.state = updatedCardInfo.state;
-    card.due = new Date(
-      now.getTime() + updatedCardInfo.scheduled_days * 24 * 3600 * 1000,
-    );
-    card.stability = updatedCardInfo.stability;
-    card.difficulty = updatedCardInfo.difficulty;
-    card.elapsed_days = elapsedDays;
-    card.scheduled_days = updatedCardInfo.scheduled_days;
-    card.reps += 1;
-    card.lapses = updatedCardInfo.lapses;
-    card.last_review = now;
-    return await this.repository.save(updatedCardInfo);
+
+    return await this.repository.save(card);
   }
 
-  async getNextCard(): Promise<ICardDocument> {
+  async getNextCard(user: Types.ObjectId): Promise<ICardDocument> {
     const cardDue = new Date();
-    const nextCard = await this.repository.find({ due: cardDue });
+    const nextCard = await this.repository.findOne({ due: cardDue });
     return nextCard;
   }
 
-  async update(
-    cardId: Types.ObjectId | string,
-    data: CardInput,
-  ): Promise<ICardDocument> {
-    const result = await this.repository.updateById(cardId, data);
+  // async update(
+  //   cardId: Types.ObjectId | string,
+  // ): Promise<ICardDocument> {
+  //   const result = await this.repository.updateById(cardId, cardData);
 
-    return result;
-  }
+  //   return result;
+  // }
 
   async create(createCardDto: CreateCardDto): Promise<ICardDocument> {
     const result = await this.repository.create(createCardDto);

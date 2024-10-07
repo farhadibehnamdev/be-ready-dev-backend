@@ -23,7 +23,7 @@ export class CreatePersonDto {
 
   @IsOptional()
   @IsMongoId()
-  profileImage?: Types.ObjectId;
+  image?: Types.ObjectId;
 
   @IsOptional()
   @IsArray()

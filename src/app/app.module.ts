@@ -6,7 +6,6 @@ import winston from 'winston';
 
 import { AuthModule } from '@modules/auth/auth.module';
 import { ImageModule } from '@modules/image/image.module';
-import { TagModule } from '@modules/tag/tag.module';
 import { UserModule } from '@modules/user/user.module';
 import { Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -21,7 +20,9 @@ import { JwtAuthGuard } from '@shared/guards/auth.guard';
 import { RolesGuard } from '@shared/guards/roles.guard';
 import { LoggerModule } from '@shared/logger/logger.module';
 import { LoggerMiddleware } from '@shared/middlewares/http-logger.middleware';
-import { ContentModule } from '@modules/content/content.module';
+import { TokenModule } from '@modules/token/token.module';
+import { CardModule } from '@modules/card/card.module';
+import { DeckModule } from '@modules/deck/deck.module';
 
 @Module({
   imports: [
@@ -56,8 +57,6 @@ import { ContentModule } from '@modules/content/content.module';
       useFactory: (config: ConfigService) => {
         return {
           uri: config.get<string>('DATABASE_URL'),
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
           connectionFactory: (connection) => {
             connection.plugin(require('mongoose-paginate-v2'));
             connection.plugin(require('mongoose-autopopulate'));
@@ -77,7 +76,9 @@ import { ContentModule } from '@modules/content/content.module';
     UserModule,
     ImageModule,
     LoggerModule,
-    ContentModule,
+    TokenModule,
+    CardModule,
+    DeckModule,
   ],
   providers: [
     ConfigService,

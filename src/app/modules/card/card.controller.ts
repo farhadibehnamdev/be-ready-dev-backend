@@ -59,8 +59,8 @@ export class CardController {
   @Roles(RoleTypeEnum.User)
   @ApiOperation({ summary: 'Next Card' })
   @ApiOkResponse({ description: 'Successfully found Card' })
-  nextCard() {
-    return this.service.getNextCard(userId);
+  nextCard(@AuthUser() user: any) {
+    return this.service.getNextCard(user);
   }
 
   @Get(':id')

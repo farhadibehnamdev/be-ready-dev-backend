@@ -73,7 +73,7 @@ export class UserService extends BaseService<UserRepository> {
 
     const content: Buffer = file.buffer;
     const aws: IAwsS3Response = await this.awsService.s3PutItemInBucket(
-      user._id,
+      user._id as string,
       content,
       {
         path: `images/users`,
@@ -103,7 +103,7 @@ export class UserService extends BaseService<UserRepository> {
 
     const content: Buffer = file.buffer;
     const aws: IAwsS3Response = await this.awsService.s3PutItemInBucket(
-      user._id,
+      user._id as string,
       content,
       {
         path: `images/users`,
@@ -112,7 +112,7 @@ export class UserService extends BaseService<UserRepository> {
 
     const imageDoc = await this.imageService.create(aws);
 
-    return this.repository.updateById(user._id, {
+    return this.repository.updateById(user._id as string, {
       avatar: imageDoc._id,
     });
   }

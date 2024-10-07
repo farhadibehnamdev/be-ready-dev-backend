@@ -54,7 +54,7 @@ export class DebuggerService {
 
     this.loggerService.error({
       description,
-      user: this.req.user ? this.req.user._id : null,
+      user: this.req.user ? (this.req.user._id as string) : null,
       tags: [sClass, sFunction],
     });
   }

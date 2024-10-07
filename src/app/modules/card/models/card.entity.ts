@@ -1,7 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { CardState } from '@shared/enums/card-state.enum';
-import { Types } from 'mongoose';
-import { ICardDocument } from '../interfaces/card.interface';
+import { Document, Types } from 'mongoose';
 @Schema()
 export class Card extends Document {
   @Prop({ type: Types.ObjectId, ref: 'Deck', required: true })

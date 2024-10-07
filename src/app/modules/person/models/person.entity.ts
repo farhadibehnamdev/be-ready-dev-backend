@@ -13,7 +13,7 @@ export class Person extends Document {
   birthDate: Date;
 
   @Prop({ type: Types.ObjectId, ref: 'Image', autopopulate: true })
-  profileImage: Types.ObjectId;
+  image: Types.ObjectId;
 
   @Prop([String])
   roles: string[];

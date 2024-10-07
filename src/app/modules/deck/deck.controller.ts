@@ -29,6 +29,7 @@ import { DeckService } from './deck.service';
 import { CreateDeckDto } from './dtos/create-deck.dto';
 import { UpdateDeckDto } from './dtos/update-deck.dto';
 import { FindDecksDto } from './dtos/find-decks.dto';
+import { AuthUser } from '@shared/decorators/auth-user.decorator';
 
 @Roles(RoleTypeEnum.All)
 @ApiTags('Deck')
@@ -37,14 +38,15 @@ export class DeckController {
   constructor(private readonly service: DeckService) {}
 
   @Post()
+  @Roles(RoleTypeEnum.All)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new Deck' })
   @ApiCreatedResponse({
     description: 'The Deck has been successfully created.',
   })
   @ApiBody({ type: CreateDeckDto })
-  create(@Body() data: CreateDeckDto) {
-    return this.service.create(data);
+  create(@Body() data: CreateDeckDto, @AuthUser() user: any) {
+    return this.service.create(data, user);
   }
 
   @Get()
